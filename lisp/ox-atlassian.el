@@ -26,7 +26,9 @@
 
 (org-export-define-derived-backend 'atlassian 'ascii
   ;; TODO: Add menu entry options
-  :translate-alist '((headline . org-atlassian-headline)))
+  :translate-alist '((headline . org-atlassian-headline)
+                     (plain-list . org-atlassian-plain-list)
+                     (item . org-atlassian-item)))
 
 ;;; User Configurable Variables
 
@@ -51,5 +53,40 @@ holding contextual information."
                        org-atlassian-max-headline-depth))
            (title (org-export-data (org-element-property :title headline) info)))
       (format "h%s. %s\n%s" level title (or contents "")))))
+
+;;;; Item
+
+(defun org-atlassian-item (item contents _info)
+  "Transcode a ITEM element from Org to Atlassian.
+CONTENTS holds the contents of the item. INFO is a plist holding
+contextual information."
+  (let ((bullet (org-atlassian--list-item-bullet item)))
+    (format "%s %s" bullet contents)))
+
+;;;; Plain List
+
+(defun org-atlassian-plain-list (_plain-list contents _info)
+  "Transcode a PLAIN-LIST element from Org to Atlassian.
+CONTENTS holds the contents of the list. INFO is a plist holding
+contextual information."
+  contents)
+
+;;;; Utility Functions
+
+(defun org-atlassian--list-item-bullet (item)
+  "Return the bullet associated with ITEM.
+Build the bullet characters by walking up the item's ancestors
+and collecting the appropriate bullet character associated with
+the plain list's type."
+  ;; Build bullet characters by walking up the tree and pushing the
+  ;; bullet appropriate for the parent plain list type.
+  (let ((bullet-chars'()))
+    (while (and item
+                (setq item (org-export-get-parent item)))
+      (when (eq (org-element-type item) 'plain-list)
+        (let* ((list-type (org-element-property :type item))
+               (char (if (eq list-type 'ordered) ?# ?*)))
+          (push char bullet-chars))))
+    (apply #'string bullet-chars)))
 
 (provide 'ox-atlassian)
