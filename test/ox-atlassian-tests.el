@@ -94,3 +94,20 @@ h6. Level 6")))
 Here's how you make a paragraph appear as a block quotation.
 #+end_quote") "
 bq. Here's how you make a paragraph appear as a block quotation.")))
+
+(ert-deftest org-atlassian-paragraph-tests ()
+  (let ((org-atlassian-unfill-paragraph t))
+    (should (string-equal-p (org-atlassian-export-string "
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
+consequat dictum nibh eu volutpat. Fusce ornare mauris vitae purus
+cursus efficitur.") "
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras consequat dictum nibh eu volutpat. Fusce ornare mauris vitae purus cursus efficitur.")))
+
+  (let ((org-atlassian-unfill-paragraph nil))
+    (should (string-equal-p (org-atlassian-export-string "
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
+consequat dictum nibh eu volutpat. Fusce ornare mauris vitae purus
+cursus efficitur.") "
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
+consequat dictum nibh eu volutpat. Fusce ornare mauris vitae purus
+cursus efficitur."))))

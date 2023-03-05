@@ -32,13 +32,18 @@
                      (horizontal-rule . org-atlassian-horizontal-rule)
                      (italic . org-atlassian-italic)
                      (item . org-atlassian-item)
+                     (paragraph . org-atlassian-paragraph)
                      (plain-list . org-atlassian-plain-list)
                      (quote-block . org-atlassian-quote-block)
                      (strike-through . org-atlassian-strike-through)
+                     (section . org-atlassian-section)
                      (subscript . org-atlassian-subscript)
                      (superscript . org-atlassian-superscript)
                      (underline . org-atlassian-underline)
-                     (verbose . org-atlassian-verbose)))
+                     (verbose . org-atlassian-verbose))
+  :options-alist
+  '((:atlassian-max-headline-depth nil nil org-atlassian-max-headline-depth)
+    (:atlassian-unfill-paragraph nil nil org-atlassian-unfill-paragraph)))
 
 ;;; User Configurable Variables
 
@@ -51,6 +56,11 @@
   "Maximum depth of a headline."
   :group 'org-export-atlassian
   :type 'integer)
+
+(defcustom org-atlassian-unfill-paragraph t
+  "Non-nil means un-fill paragraph text before exporting."
+  :group 'org-export-atlassian
+  :type 'boolean)
 
 ;;;; Bold
 
@@ -76,7 +86,7 @@ CONTENTS holds the contents of the headline. INFO is a plist
 holding contextual information."
   (unless (org-element-property :footnote-section-p headline)
     (let* ((level (min (org-export-get-relative-level headline info)
-                       org-atlassian-max-headline-depth))
+                       (or (plist-get info :atlassian-max-headline-depth))))
            (title (org-export-data (org-element-property :title headline) info)))
       (format "h%s. %s\n%s" level title (or contents "")))))
 
@@ -103,6 +113,16 @@ CONTENTS holds the contents of the item. INFO is a plist holding
 contextual information."
   (let ((bullet (org-atlassian--list-item-bullet item)))
     (format "%s %s" bullet contents)))
+
+;;;; Paragraph
+
+(defun org-atlassian-paragraph (paragraph contents info)
+  "Transcode a PARAGRAPH element from Org to Atlassian.
+CONTENTS holds the contents of the paragraph. INFO is a plist
+holding contextual information."
+  (if (plist-get info :atlassian-unfill-paragraph)
+      (string-fill contents (length contents))
+    contents))
 
 ;;;; Plain List
 
