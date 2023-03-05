@@ -26,9 +26,17 @@
 
 (org-export-define-derived-backend 'atlassian 'ascii
   ;; TODO: Add menu entry options
-  :translate-alist '((headline . org-atlassian-headline)
+  :translate-alist '((bold . org-atlassian-bold)
+                     (code . org-atlassian-code)
+                     (headline . org-atlassian-headline)
+                     (italic . org-atlassian-italic)
+                     (item . org-atlassian-item)
                      (plain-list . org-atlassian-plain-list)
-                     (item . org-atlassian-item)))
+                     (strike-through . org-atlassian-strike-through)
+                     (subscript . org-atlassian-subscript)
+                     (superscript . org-atlassian-superscript)
+                     (underline . org-atlassian-underline)
+                     (verbose . org-atlassian-verbose)))
 
 ;;; User Configurable Variables
 
@@ -42,6 +50,22 @@
   :group 'org-export-atlassian
   :type 'integer)
 
+;;;; Bold
+
+(defun org-atlassian-bold (_bold contents _info)
+  "Transcode BOLD from Org to Atlassian.
+CONTENTS holds the text with bold markup. INFO is a plist holding
+contextual information."
+  (format "*%s*" contents))
+
+;;;; Code
+
+(defun org-atlassian-code (code _contents _info)
+  "Transcode CODE from Org to Atlassian.
+CONTENTS is nil. INFO is a plist holding contextual information."
+  (let ((value (org-element-property :value code)))
+    (format "{{%s}}" value)))
+
 ;;;; Headline
 
 (defun org-atlassian-headline (headline contents info)
@@ -53,6 +77,14 @@ holding contextual information."
                        org-atlassian-max-headline-depth))
            (title (org-export-data (org-element-property :title headline) info)))
       (format "h%s. %s\n%s" level title (or contents "")))))
+
+;;;; Italic
+
+(defun org-atlassian-italic (_italic contents _info)
+  "Transcode ITALIC from Org to Atlassian.
+CONTENTS holds the text with italic markup. INFO is a plist holding
+contextual information."
+  (format "_%s_" contents))
 
 ;;;; Item
 
@@ -70,6 +102,46 @@ contextual information."
 CONTENTS holds the contents of the list. INFO is a plist holding
 contextual information."
   contents)
+
+;;;; Strike-through
+
+(defun org-atlassian-strike-through (_strike-through contents _info)
+  "Transcode STRIKE-THROUGH from Org to Atlassian.
+CONTENTS holds the text with strike-through markup. INFO is a
+plist holding contextual information."
+  (format "-%s-" contents))
+
+;;;; Subscript
+
+(defun org-atlassian-subscript (_subscript contents _info)
+  "Transcode SUBSCRIPT from Org to Atlassian.
+CONTENTS holds the text with subscript markup. INFO is a plist
+holding contextual information."
+  (format "~%s~" contents))
+
+;;;; Superscript
+
+(defun org-atlassian-superscript (_superscript contents _info)
+  "Transcode SUPERSCRIPT from Org to Atlassian.
+CONTENTS holds the text with superscript markup. INFO is a plist
+holding contextual information."
+  (format "{^%s^}" contents))
+
+;;;; Underline
+
+(defun org-atlassian-underline (_underline contents _info)
+  "Transcode UNDERLINE from Org to Atlassian.
+CONTENTS holds the text with underline markup. INFO is a plist
+holding contextual information."
+  (format "+%s+" contents))
+
+;;;; Verbatim
+
+(defun org-atlassian-verbose (verbose _contents _info)
+  "Transcode VERBOSE from Org to Atlassian.
+CONTENTS is nil. INFO is a plist holding contextual information."
+  (let ((value (org-element-property :value verbose)))
+    (format "{{%s}}" value)))
 
 ;;;; Utility Functions
 
