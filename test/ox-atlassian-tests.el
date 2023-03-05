@@ -81,3 +81,16 @@ h6. Level 6")))
   (let ((org-export-with-sub-superscripts nil))
     (should (string-equal-p (org-atlassian-export-string "kg/m^3") "kg/m^3"))
     (should (string-equal-p (org-atlassian-export-string "Text with_subscript") "Text with_subscript"))))
+
+(ert-deftest org-atlassian-horizontal-rule-tests ()
+  (should (string-equal-p (org-atlassian-export-string "-----") "----"))
+  (should (string-equal-p (org-atlassian-export-string "------") "----"))
+  (should (string-equal-p (org-atlassian-export-string "-------") "----"))
+  (should (string-equal-p (org-atlassian-export-string "-------") "----")))
+
+(ert-deftest org-atlassian-text-block-quote-tests ()
+  (should (string-equal-p (org-atlassian-export-string "
+#+begin_quote
+Here's how you make a paragraph appear as a block quotation.
+#+end_quote") "
+bq. Here's how you make a paragraph appear as a block quotation.")))

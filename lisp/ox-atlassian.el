@@ -29,9 +29,11 @@
   :translate-alist '((bold . org-atlassian-bold)
                      (code . org-atlassian-code)
                      (headline . org-atlassian-headline)
+                     (horizontal-rule . org-atlassian-horizontal-rule)
                      (italic . org-atlassian-italic)
                      (item . org-atlassian-item)
                      (plain-list . org-atlassian-plain-list)
+                     (quote-block . org-atlassian-quote-block)
                      (strike-through . org-atlassian-strike-through)
                      (subscript . org-atlassian-subscript)
                      (superscript . org-atlassian-superscript)
@@ -78,6 +80,13 @@ holding contextual information."
            (title (org-export-data (org-element-property :title headline) info)))
       (format "h%s. %s\n%s" level title (or contents "")))))
 
+;;;; Horizontal Rule
+
+(defun org-atlassian-horizontal-rule (_horizontal-rule _contents _info)
+  "Transcode a HORIZONTAL-RULE element from Org to Atlassian.
+CONTENTS is nil. INFO is a plist holding contextual information."
+  "----")
+
 ;;;; Italic
 
 (defun org-atlassian-italic (_italic contents _info)
@@ -101,6 +110,22 @@ contextual information."
   "Transcode a PLAIN-LIST element from Org to Atlassian.
 CONTENTS holds the contents of the list. INFO is a plist holding
 contextual information."
+  contents)
+
+;;;; Quote Block
+
+(defun org-atlassian-quote-block (_quote-block contents _info)
+  "Transcode a QUOTE-BLOCK element from Org to Atlassian.
+CONTENTS holds the contents of the block. INFO is a plist holding
+contextual information."
+  (format "bq. %s" contents))
+
+;;;; Section
+
+(defun org-atlassian-section (_section contents _info)
+  "Transcode a SECTION element from Org to Atlassian.
+CONTENTS holds the contents of the section. INFO is a plist
+holding contextual information."
   contents)
 
 ;;;; Strike-through
