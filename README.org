@@ -34,7 +34,12 @@ Put =ox-atlassian.el= in your load path and require it as follows.
 The following interactive functions may be used to convert from Org
 syntax to Atlassian wiki syntax.
 
- + =org-atlassian-convert-region-to-atlassian= :: Convert active region to Atlassian syntax.
- + =org-atlassian-export-as-atlassian= :: Convert the current buffer to an Atlassian buffer.
+ + =org-atlassian-convert-region-to-atlassian= :: Convert active
+   region to Atlassian syntax.
+ + =org-atlassian-export-as-atlassian= :: Convert the current buffer
+   to an Atlassian buffer.
  + =org-atlassian-export-to-atlassian= :: Convert the current buffer
-   to an Atlassian file with .atlassian file extension.
+   to an Atlassian file with =.atlassian= file extension.
+
+This module also hooks into the [[https://orgmode.org/manual/The-Export-Dispatcher.html][Org export dispatcher]] which exposes
+the functions listed above via the dispatcher's hierarchical menu.

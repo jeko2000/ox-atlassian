@@ -25,7 +25,15 @@
 (require 'ox)
 
 (org-export-define-derived-backend 'atlassian 'ascii
-  ;; TODO: Add menu entry options
+  :menu-entry
+  '(?a "Export to Atlassian Wiki"
+       ((?a "To temporary buffer"
+            (lambda (a s v b) (org-atlassian-export-as-atlassian a s v)))
+        (?m "To file" (lambda (a s v b) (org-atlassian-export-to-atlassian a s v)))
+        (?o "To file and open"
+            (lambda (a s v b)
+              (if a (org-atlassian-export-to-atlassian t s v)
+                (org-open-file (org-atlassian-export-to-atlassian nil s v)))))))
   :translate-alist '((bold . org-atlassian-bold)
                      (code . org-atlassian-code)
                      (headline . org-atlassian-headline)
