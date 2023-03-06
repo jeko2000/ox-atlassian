@@ -1,0 +1,40 @@
+#+TITLE:     ox-atlassian
+#+AUTHOR:    Johnny Ruiz
+#+EMAIL:     johnny@ruiz-usa.com
+#+DESCRIPTION: Atlassian Wiki Markup Back-End for Org Export Engine
+#+LANGUAGE:  en
+#+OPTIONS:   H:4 num:nil toc:2 p:t
+** Introduction
+OX-ATLASSIAN implements an [[https://confluence.atlassian.com/doc/confluence-wiki-markup-251003035.html][Atlassian Wiki Markup]] back-end for the [[https://github.com/tkf/org-mode/blob/master/contrib/lisp/org-export.el][Org
+Export Engine]].
+** Prerequisites
+The following lists the prerequisites needed to follow this
+[[https://github.com/jeko2000/ox-atlassian][README]] successfully.
+
+1) [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lisp.html][Org Mode]]
+   + In particular, the [[https://orgmode.org/manual/Exporting.html][exporting]] section in the Org manual.
+2) [[https://confluence.atlassian.com/doc/confluence-wiki-markup-251003035.html][Atlassian Wiki Markup]]
+
+** Motivation
+The Atlassian/Confluence editor allows content creators to create and
+edit pages, blog posts, and comments. Although a [[https://en.wikipedia.org/wiki/WYSIWYG][WYSIWYG]] editor,
+Atlassian supports [[https://confluence.atlassian.com/doc/confluence-wiki-markup-251003035.html][a markup language]] which the editor can
+interactively convert to Atlassian's native rich editor format.
+
+This package allows us to write confluence pages via Org syntax and
+export it to Atlassian's markup language.
+
+** Installation
+Put =ox-atlassian.el= in your load path and require it as follows.
+#+begin_src emacs-lisp
+(require 'ox-atlassian)
+#+end_src
+
+** Usage
+The following interactive functions may be used to convert from Org
+syntax to Atlassian wiki syntax.
+
+ + =org-atlassian-convert-region-to-atlassian= :: Convert active region to Atlassian syntax.
+ + =org-atlassian-export-as-atlassian= :: Convert the current buffer to an Atlassian buffer.
+ + =org-atlassian-export-to-atlassian= :: Convert the current buffer
+   to an Atlassian file with .atlassian file extension.

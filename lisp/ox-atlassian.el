@@ -40,7 +40,7 @@
                      (subscript . org-atlassian-subscript)
                      (superscript . org-atlassian-superscript)
                      (underline . org-atlassian-underline)
-                     (verbose . org-atlassian-verbose))
+                     (verbatim . org-atlassian-verbatim))
   :options-alist
   '((:atlassian-max-headline-depth nil nil org-atlassian-max-headline-depth)
     (:atlassian-unfill-paragraph nil nil org-atlassian-unfill-paragraph)))
@@ -182,10 +182,10 @@ holding contextual information."
 
 ;;;; Verbatim
 
-(defun org-atlassian-verbose (verbose _contents _info)
+(defun org-atlassian-verbatim (verbatim _contents _info)
   "Transcode VERBOSE from Org to Atlassian.
 CONTENTS is nil. INFO is a plist holding contextual information."
-  (let ((value (org-element-property :value verbose)))
+  (let ((value (org-element-property :value verbatim)))
     (format "{{%s}}" value)))
 
 ;;;; Utility Functions
@@ -205,5 +205,70 @@ the plain list's type."
                (char (if (eq list-type 'ordered) ?# ?*)))
           (push char bullet-chars))))
     (apply #'string bullet-chars)))
+
+;;; End-user functions
+
+;;;###autoload
+(defun org-atlassian-convert-region-to-atlassian ()
+  "Assume region has Org syntax, and convert it to Atlassian Wiki."
+  (interactive)
+  (org-export-replace-region-by 'atlassian))
+
+;;;###autoload
+(defun org-atlassian-export-as-atlassian (&optional async subtreep visible-only)
+  "Export current buffer to an Atlassian Wiki buffer.
+
+If narrowing is active in the current buffer, only export its narrowed
+part.
+
+If a region is active, export that region.
+
+A non-nil optional argument ASYNC means the process should happen
+asynchronously. The resulting buffer should be accessible through the
+`org-export-stack' interface.
+
+When optional argument SUBTREEP is non-nil, export the sub-tree at
+point, extracting information from the headline properties first.
+
+When optional argument VISIBLE-ONLY is non-nil, don't export contents
+of hidden elements.
+
+Export is done in a buffer named \"*Org Atlassian Wiki Export*\",
+which will be displayed when `org-export-show-temporary-export-buffer'
+is non-nil."
+  (interactive)
+  (org-export-to-buffer 'atlassian "*Org Atlassian Wiki Export*"
+    async subtreep visible-only nil nil (lambda () (text-mode))))
+
+;;;###autoload
+(defun org-atlassian-export-to-atlassian
+    (&optional async subtreep visible-only body-only ext-plist)
+  "Export current buffer to an Atlassian Wiki file.
+
+If narrowing is active in the current buffer, only export its narrowed part.
+
+If a region is active, export that region.
+
+A non-nil optional argument ASYNC means the process should happen
+asynchronously. The resulting file should be accessible through the
+`org-export-stack' interface.
+
+When optional argument SUBTREEP is non-nil, export the sub-tree at point,
+extracting information from the headline properties first.
+
+When optional argument VISIBLE-ONLY is non-nil, don't export contents of
+hidden elements.
+
+When optional argument BODY-ONLY is non-nil, strip title and table of contents
+from output.
+
+EXT-PLIST, when provided, is a property list with external parameters
+overriding Org default settings, but still inferior to file-local settings.
+
+Return output file's name."
+  (interactive)
+  (let ((file (org-export-output-file-name ".atlassian" subtreep)))
+    (org-export-to-file 'atlassian file
+      async subtreep visible-only body-only ext-plist)))
 
 (provide 'ox-atlassian)
